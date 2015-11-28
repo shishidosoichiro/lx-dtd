@@ -1,0 +1,36 @@
+{
+  "name": "lx-dtd",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "lx": "git+https://github.com/shishidosoichiro/lx.git"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "gulp": "^3.9.0",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.2.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "expose-loader": "^0.7.1",
+    "mocha": "^2.3.4",
+    "webpack-stream": "^2.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shishidosoichiro/lx-dtd.git"
+  },
+  "author": "shishidosoichiro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shishidosoichiro/lx-dtd/issues"
+  },
+  "homepage": "https://github.com/shishidosoichiro/lx-dtd#readme"
+}
