@@ -22,14 +22,14 @@ describe('dtd', function(){
 	})
 
 	describe('"declare" lexer', function(){
-		it('tokenizes DOCTYPE', function(){
+		it('should tokenize DOCTYPE', function(){
 			var input = '<!DOCTYPE note [\
 ]>';
 			var output = dtd.tokenize(input);
 			output = output.map(toString);
 			expect(output[0]).to.equal('DOCTYPE(0:note)');
 		})
-		it('throws "unexpected declaration."', function(){
+		it('should throw "unexpected declaration."', function(){
 			var input = 'null\
 <!DOCTYPE note [\
 ]>';
@@ -38,7 +38,7 @@ describe('dtd', function(){
 		})
 	})
 	describe('"node" lexer', function(){
-		it('tokenizes ELEMENT', function(){
+		it('should tokenize ELEMENT', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to,from,heading,body)>\
 <!ELEMENT to (#PCDATA)>\
@@ -52,7 +52,7 @@ describe('dtd', function(){
 		})
 	})
 	describe('"element" lexer', function(){
-		it('tokenizes ELEMENT.CATEGORY', function(){
+		it('should tokenize ELEMENT.CATEGORY', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note ANY>\
 <!ELEMENT to EMPTY >\
@@ -62,7 +62,7 @@ describe('dtd', function(){
 			expect(output[2]).to.equal('ELEMENT.CATEGORY(31:ANY)');
 			expect(output[4]).to.equal('ELEMENT.CATEGORY(48:EMPTY)');
 		})
-		it('tokenizes ELEMENT.CONTENT', function(){
+		it('should tokenize ELEMENT.CONTENT', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to,from,heading,body)>\
 <!ELEMENT to (#PCDATA)>\
@@ -74,7 +74,7 @@ describe('dtd', function(){
 		})
 	})
 	describe('"element.content" lexer', function(){
-		it('tokenizes ELEMENT.CONTENT.CHILD', function(){
+		it('should tokenize ELEMENT.CONTENT.CHILD', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to,from,heading,body)>\
 <!ELEMENT to (#PCDATA)>\
@@ -86,7 +86,7 @@ describe('dtd', function(){
 		})
 	})
 	describe('"element.content.delimiter" lexer', function(){
-		it('tokenizes ELEMENT.CONTENT.SEQUENCE', function(){
+		it('should tokenize ELEMENT.CONTENT.SEQUENCE', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to,from,heading,body)>\
 ]>';
@@ -96,7 +96,7 @@ describe('dtd', function(){
 			expect(output[6]).to.equal('ELEMENT.CONTENT.SEQUENCE(39:,)');
 			expect(output[8]).to.equal('ELEMENT.CONTENT.SEQUENCE(47:,)');
 		})
-		it('tokenizes ELEMENT.CONTENT.OR', function(){
+		it('should tokenize ELEMENT.CONTENT.OR', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to|from|heading|body)>\
 ]>';
@@ -108,7 +108,7 @@ describe('dtd', function(){
 		})
 	})
 	describe('"element.content.suffix" lexer', function(){
-		it('tokenizes ELEMENT.CONTENT.MIN-ONE-OCCURENCE', function(){
+		it('should tokenize ELEMENT.CONTENT.MIN-ONE-OCCURENCE', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to+)>\
 <!ELEMENT note (to|from+)>\
@@ -118,7 +118,7 @@ describe('dtd', function(){
 			expect(output[4]).to.equal('ELEMENT.CONTENT.MIN-ONE-OCCURENCE(34:+)');
 			expect(output[12]).to.equal('ELEMENT.CONTENT.MIN-ONE-OCCURENCE(60:+)');
 		})
-		it('tokenizes ELEMENT.CONTENT.ZERO-OR-MORE-OCCURENCE', function(){
+		it('should tokenize ELEMENT.CONTENT.ZERO-OR-MORE-OCCURENCE', function(){
 			var input = '<!DOCTYPE note [\
 <!ELEMENT note (to*)>\
 <!ELEMENT note (to|from*)>\
@@ -128,7 +128,7 @@ describe('dtd', function(){
 			expect(output[4]).to.equal('ELEMENT.CONTENT.ZERO-OR-MORE-OCCURENCE(34:*)');
 			expect(output[12]).to.equal('ELEMENT.CONTENT.ZERO-OR-MORE-OCCURENCE(60:*)');
 		})
-		it('tokenizes ELEMENT.CONTENT.ZERO-OR-ONE-OCCURENCE', function(){
+		it('should tokenize ELEMENT.CONTENT.ZERO-OR-ONE-OCCURENCE', function(){
 			var input = '<!DOCTYPE note [\n' +
 				'<!ELEMENT note (to?)>\n' +
 				'<!ELEMENT note (to|from?)>\n' +
