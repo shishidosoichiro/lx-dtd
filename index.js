@@ -21,7 +21,10 @@ var tokenize = (function(){
   element.content.delmmiter = Lexer()
   var attlist = Lexer()
   attlist.type = Lexer()
+  attlist.type.list = Lexer()
+  attlist.type.list.defaultValue = Lexer()
   attlist.value = Lexer()
+  attlist.value.literal = Lexer()
 
   doctype
   .match(/<\!DOCTYPE\s+([\w\.\:\-]+)\s+\[/, shift, token('DOCTYPE'), state(node))
@@ -66,9 +69,30 @@ var tokenize = (function(){
 
   attlist
   .match(/([\w\.\:\-]+)\s+/, shift, token('ATTR.NAME'), state(attlist.type))
+  .match(/^\s*>/, token('ATTLIST.END'), back)
+  .other(raise('invalid attribute name difinition.'))
 
   attlist.type
-  .match(/([\w\.\:\-]+)\s+/, shift, token('ATTR.NAME'), state(attlist.value))
+  .match(/^(CDATA|ID|IDREF|IDREFS|NMTOKEN|NMTOKENS|ENTITY|ENTITIES|NOTATION|xml\:)\s+/, shift, token('ATTR.TYPE'), back, state(attlist.value))
+  .match(/^\(/, shift, token('ATTR.TYPE.LIST'), back, state(attlist.type.list))
+  .other(raise('invalid attribute type difinition.'))
+
+  attlist.type.list
+  .match(/^([^\|\)]*?)\|/, shift, token('ATTR.TYPE.LIST.VALUE'))
+  .match(/^([^\|\)]*?)\)\s+\"/, shift, token('ATTR.TYPE.LIST.VALUE.END'), back, state(attlist.type.list.defaultValue))
+  .other(raise('invalid attribute type enumerated values difinition.'))
+
+  attlist.type.list.defaultValue
+  .match(/^([^\"]*?)\"/, shift, token('ATTR.TYPE.LIST.DEFAULT'), back)
+
+  attlist.value
+  .match(/^(\#REQUIRED|\#IMPLIED)\s+/, shift, token('ATTR.VALUE'), back)
+  .match(/^(\#FIXED)\s+\"/, shift, token('ATTR.VALUE'), back, state(attlist.value.literal))
+  .match(/^\"/, back, state(attlist.value.literal))
+  .other(raise('invalid attribute value difinition.'))
+
+  attlist.value.literal
+  .match(/^([^\"]*?)\"/, shift, token('ATTR.VALUE.LITERAL'), back)
 
   return function(string){
     var context = {tokens: []};
@@ -80,6 +104,7 @@ var tokenize = (function(){
 // convert tokens to vdom;
 var build = function(tokens){
 	return tokens;
+  /*
   var stack = [];
   var top = {attrs: {}, children: []};
   var current = top;
@@ -88,6 +113,7 @@ var build = function(tokens){
     var token = tokens[i];        
   }
   return top.children;
+  */
 };
 
 module.exports = function(string){
