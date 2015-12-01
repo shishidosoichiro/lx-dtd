@@ -157,6 +157,7 @@
 	// convert tokens to vdom;
 	var build = function(tokens){
 		return tokens;
+	  /*
 	  var stack = [];
 	  var top = {attrs: {}, children: []};
 	  var current = top;
@@ -165,6 +166,7 @@
 	    var token = tokens[i];        
 	  }
 	  return top.children;
+	  */
 	};
 
 	module.exports = function(string){
