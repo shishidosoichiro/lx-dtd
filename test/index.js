@@ -206,4 +206,24 @@ describe('dtd', function(){
 			expect(output[7]).to.equal('ATTLIST.END(73:>)');
 		})
 	})
+	describe('"attlist.type" lexer', function(){
+		it('should tokenize ATTR.NAME', function(){
+			var input = '<!DOCTYPE note [\n' +
+			'<!ELEMENT note ANY>\n' +
+			'<!ATTLIST payment type CDATA "check">\n' +
+			']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[4]).to.equal('ATTR.NAME(55:type)');
+		})
+		it('should tokenize ATTR.END', function(){
+			var input = '<!DOCTYPE note [\n' +
+			'<!ELEMENT note ANY>\n' +
+			'<!ATTLIST payment type CDATA "check">\n' +
+			']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[7]).to.equal('ATTLIST.END(73:>)');
+		})
+	})
 })
