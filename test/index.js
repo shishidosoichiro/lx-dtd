@@ -5,6 +5,9 @@ var dtd = require('../index');
 var toString = function(e){
 	return e.toString();
 };
+var log = function(output){
+	console.log(output.map(function(str, i){return 'expect(output[' + i + ']).to.equal(\'' + str + '\');'}))
+};
 
 describe('dtd', function(){
 
@@ -207,23 +210,61 @@ describe('dtd', function(){
 		})
 	})
 	describe('"attlist.type" lexer', function(){
-		it('should tokenize ATTR.NAME', function(){
+		it('should tokenize ATTR.TYPE', function(){
 			var input = '<!DOCTYPE note [\n' +
-			'<!ELEMENT note ANY>\n' +
-			'<!ATTLIST payment type CDATA "check">\n' +
-			']>';
+				'<!ATTLIST payment type CDATA "check">\n' +
+				'<!ATTLIST payment type ID "check">\n' +
+				'<!ATTLIST payment type IDREF "check">\n' +
+				'<!ATTLIST payment type IDREFS "check">\n' +
+				'<!ATTLIST payment type NMTOKEN "check">\n' +
+				'<!ATTLIST payment type NMTOKENS "check">\n' +
+				'<!ATTLIST payment type ENTITY "check">\n' +
+				'<!ATTLIST payment type ENTITIES "check">\n' +
+				'<!ATTLIST payment type NOTATION "check">\n' +
+				']>';
 			var output = dtd.tokenize(input);
 			output = output.map(toString);
-			expect(output[4]).to.equal('ATTR.NAME(55:type)');
-		})
-		it('should tokenize ATTR.END', function(){
-			var input = '<!DOCTYPE note [\n' +
-			'<!ELEMENT note ANY>\n' +
-			'<!ATTLIST payment type CDATA "check">\n' +
-			']>';
-			var output = dtd.tokenize(input);
-			output = output.map(toString);
-			expect(output[7]).to.equal('ATTLIST.END(73:>)');
+			expect(output[3]).to.equal('ATTR.TYPE(40:CDATA)');
+			expect(output[8]).to.equal('ATTR.TYPE(78:ID)');
+			expect(output[13]).to.equal('ATTR.TYPE(113:IDREF)');
+			expect(output[18]).to.equal('ATTR.TYPE(151:IDREFS)');
+			expect(output[23]).to.equal('ATTR.TYPE(190:NMTOKEN)');
+			expect(output[28]).to.equal('ATTR.TYPE(230:NMTOKENS)');
+			expect(output[33]).to.equal('ATTR.TYPE(271:ENTITY)');
+			expect(output[38]).to.equal('ATTR.TYPE(310:ENTITIES)');
+			expect(output[43]).to.equal('ATTR.TYPE(351:NOTATION)');
 		})
 	})
+  describe('"attlist.type.list" lexer', function(){
+		it('should tokenize ATTR.TYPE.LIST.VALUE', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST payment type (check|cash) "cash">\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[3]).to.equal('ATTR.TYPE.LIST(40)');
+			expect(output[4]).to.equal('ATTR.TYPE.LIST.VALUE(41:check)');
+			expect(output[5]).to.equal('ATTR.TYPE.LIST.VALUE.END(47:cash)');
+		})
+  });
+
+  describe('"attlist.type.list.defaultValue" lexer', function(){
+		it('should tokenize ATTR.TYPE.LIST.DEFAULT', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST payment type (check|cash) "cash">\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[6]).to.equal('ATTR.TYPE.LIST.DEFAULT(54:cash)');
+		})
+  });
+
+  describe('"attlist.value" lexer', function(){
+
+  });
+
+  describe('"attlist.value.literal" lexer', function(){
+
+  });
+
 })
