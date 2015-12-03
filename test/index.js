@@ -260,11 +260,41 @@ describe('dtd', function(){
   });
 
   describe('"attlist.value" lexer', function(){
-
+		it('should tokenize ATTR.VALUE(#REQUIRED)', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST person number CDATA #REQUIRED>\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[4]).to.equal('ATTR.VALUE(47:#REQUIRED)');
+		})
+		it('should tokenize ATTR.VALUE(#IMPLIED)', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST contact fax CDATA #IMPLIED>\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[4]).to.equal('ATTR.VALUE(45:#IMPLIED)');
+		})
+		it('should tokenize ATTR.VALUE(#FIXED)', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST sender company CDATA #FIXED "Microsoft">\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[4]).to.equal('ATTR.VALUE(48:#FIXED)');
+		})
   });
 
   describe('"attlist.value.literal" lexer', function(){
-
+		it('should tokenize ATTR.VALUE(#FIXED)', function(){
+			var input = '<!DOCTYPE note [\n' +
+				'<!ATTLIST sender company CDATA #FIXED "Microsoft corporation.">\n' +
+				']>';
+			var output = dtd.tokenize(input);
+			output = output.map(toString);
+			expect(output[5]).to.equal('ATTR.VALUE.LITERAL(56:Microsoft corporation.)');
+		})
   });
 
 })

@@ -139,7 +139,7 @@
 	  .match(/^([^\"]*?)\"/, shift, token('ATTR.TYPE.LIST.DEFAULT'), back)
 
 	  attlist.value
-	  .match(/^(\#REQUIRED|\#IMPLIED)\s+/, shift, token('ATTR.VALUE'), back)
+	  .match(/^(\#REQUIRED|\#IMPLIED)\s*/, shift, token('ATTR.VALUE'), back)
 	  .match(/^(\#FIXED)\s+\"/, shift, token('ATTR.VALUE'), back, state(attlist.value.literal))
 	  .match(/^\"/, back, state(attlist.value.literal))
 	  .other(raise('invalid attribute value difinition.'))
@@ -279,9 +279,13 @@
 	  this.tokens.push(token)
 	};
 	Lexer.raise = function(message){
-	  return function(arg){
-	    var error = new Error(message)
-	    error.arg = arg
+	  return function(string){
+	    var args = {};
+	    args.string = string;
+	    args.index = this.index;
+	    var error = new Error(message + ' ' + JSON.stringify(args));
+	    error.string = args.string;
+	    error.index = args.index;
 	    throw error;
 	  };
 	};
@@ -378,8 +382,13 @@
 	  var sources = [];
 	  var map = {};
 	  var wrap = function(src){
-	    return '(' + _.call.call(this, src) + ')';
+	    return '(' + src + ')';
 	  }
+	  var _regex;
+	  var regex = function(){
+	    var source = '(?:' + sources.map(wrap).join('|') + ')';
+	    return new RegExp(source, options.flags);
+	  };
 
 	  var store = {
 	    sources: sources,
@@ -391,10 +400,11 @@
 	      map[key] = rule;
 	      sources.push(rule.source)
 	      this.last = rule;
+	      _regex = regex();
 	    },
 	    regex: function(){
-	      var source = '(?:' + store.sources.map(wrap, this).join('|') + ')';
-	      return new RegExp(source, options.flags);
+	      _regex.lastIndex = 0;
+	      return _regex;
 	    }
 	  }
 	  return store;

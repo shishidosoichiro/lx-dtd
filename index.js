@@ -86,7 +86,7 @@ var tokenize = (function(){
   .match(/^([^\"]*?)\"/, shift, token('ATTR.TYPE.LIST.DEFAULT'), back)
 
   attlist.value
-  .match(/^(\#REQUIRED|\#IMPLIED)\s+/, shift, token('ATTR.VALUE'), back)
+  .match(/^(\#REQUIRED|\#IMPLIED)\s*/, shift, token('ATTR.VALUE'), back)
   .match(/^(\#FIXED)\s+\"/, shift, token('ATTR.VALUE'), back, state(attlist.value.literal))
   .match(/^\"/, back, state(attlist.value.literal))
   .other(raise('invalid attribute value difinition.'))
