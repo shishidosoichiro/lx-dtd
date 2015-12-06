@@ -6,7 +6,7 @@ var rename = require("gulp-rename");
 var webpack = require('webpack-stream');
 
 gulp.task('pre-test', function () {
-  return gulp.src(['index.js'])
+  return gulp.src(['index.js', 'lib//**/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -31,7 +31,7 @@ gulp.task('build', function() {
 })
 
 gulp.task('watch', function(){
-	gulp.watch(['index.js', 'test/**/*.js'], ['test', 'build']);
+	gulp.watch(['index.js', 'lib//**/*.js', 'test/**/*.js'], ['test', 'build']);
 });
 
 gulp.task('default', ['watch', 'test', 'build']);
